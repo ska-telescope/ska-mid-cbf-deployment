@@ -1,0 +1,50 @@
+display: ":0"
+xauthority: "~/.Xauthority"
+
+enabled: true
+
+system: csp
+subsystem: mid.cbf
+telescope: SKA-mid
+
+labels:
+  app: ska-mid-cbf-deployment
+
+global:
+  minikube: false
+  k3d: false
+  exposeDatabaseDS: true
+  exposeAllDS: false
+  tango_host: databaseds-tango-base-test:10000
+  dsconfig:
+    image:
+      registry: artefact.skao.int
+      image: ska-tango-images-tango-dsconfig
+      tag: 1.5.13
+      pullPolicy: IfNotPresent
+
+
+ska-mid-cbf-fhs-vcc:
+  VCCUnits:
+    - id: "FhsVccStackDeviceServer4"
+      is_emulated: true
+      networkSwitchId: 127.0.0.1
+      bmc-endpoint: "ip"
+      instances:
+        - name: fhs-vcc-10
+          deviceId: "10"
+        - name: fhs-vcc-11
+          deviceId: "11"
+        - name: fhs-vcc-12
+          deviceId: "12"
+    - id: "FhsVccStackDeviceServer3"
+      is_emulated: true
+      networkSwitchId: 127.0.0.1
+      bmc-endpoint: "ip"
+      instances:
+        - name: fhs-vcc-20
+          deviceId: "20"
+        - name: fhs-vcc-21
+          deviceId: "21"
+        - name: fhs-vcc-22
+          deviceId: "22"

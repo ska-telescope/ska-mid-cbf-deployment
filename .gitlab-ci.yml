@@ -12,8 +12,10 @@ stages:
   - lint
   - build
   - test
-  - scan
   - pages
+  - publish
+  - scan
+
 
 
 # Standardised included jobs
@@ -23,31 +25,42 @@ variables:
 
 # Include CI templates
 include:
-# Python packages build,lint, test, scan and publish
+
+# Python
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/python.gitlab-ci.yml'
 
-# Jupyter notebook linting and testing
+# OCI images
   - project: 'ska-telescope/templates-repository'
-    file: 'gitlab-ci/includes/notebook.gitlab-ci.yml'
+    file: 'gitlab-ci/includes/oci-image.gitlab-ci.yml'
 
-# Helm Charts
+# Helm charts
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/helm-chart.gitlab-ci.yml'
 
-# Docs pages
+# Docs
   - project: 'ska-telescope/templates-repository'
-    file: 'gitlab-ci/includes/docs-pages.gitlab-ci.yml'
+    file: 'gitlab-ci/includes/docs.gitlab-ci.yml'
+
+# Docs
+  - project: 'ska-telescope/templates-repository'
+    file: 'gitlab-ci/includes/release.gitlab-ci.yml'
 
 # .post step finalisers eg: badges
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/finaliser.gitlab-ci.yml'
 
-# changelog release page
-  - project: 'ska-telescope/templates-repository'
-    file: 'gitlab-ci/includes/changelog.gitlab-ci.yml'
+python-lint:
+  before_script:
+    - apt-get update && apt-get install -y graphviz graphviz-dev
+    - poetry config virtualenvs.in-project true
+    - echo "python-build Setting.. poetry config virtualenvs.create $POETRY_CONFIG_VIRTUALENVS_CREATE"
+    - poetry config virtualenvs.create $POETRY_CONFIG_VIRTUALENVS_CREATE
+    - |
+      if [[ -n $CI_POETRY_VERSION ]] && [[ $(poetry --version) != *$CI_POETRY_VERSION* ]]; then
+        echo "python-lint: Updating poetry to $CI_POETRY_VERSION";
+        time poetry self update $CI_POETRY_VERSION;
+      fi;
 
-# deploy steps
-  - project: 'ska-telescope/templates-repository'
-    file: 'gitlab-ci/includes/deploy.gitlab-ci.yml'
-
+      echo "python-lint: Installing with poetry";
+      time poetry install --all-extras;

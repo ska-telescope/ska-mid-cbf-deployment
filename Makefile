@@ -1,38 +1,35 @@
-# Use bash shell with pipefail option enabled so that the return status of a
-# piped command is the value of the last (rightmost) commnand to exit with a
-# non-zero status. This lets us pipe output into tee but still exit on test
-# failures.
-SHELL = /bin/bash
-.SHELLFLAGS = -o pipefail -c
 
-all: test lint
+PROJECT = ska-mid-cbf-deployment
 
-# The following steps copy across useful output to this volume which can
-# then be extracted to form the CI summary for the test procedure.
-test:
+PYTHON_RUNNER = poetry run python -m
+POETRY_PYTHON_RUNNER = poetry run python -m
 
-	 python setup.py test | tee ./build/setup_py_test.stdout; \
-	 mv coverage.xml ./build/reports/code-coverage.xml;
+# KUBE_NAMESPACE defines the Kubernetes Namespace that will be deployed to
+# using Helm.  If this does not already exist it will be created
+KUBE_NAMESPACE ?= ska-mid-cbf-deployment
 
-# The following steps copy across useful output to this volume which can
-# then be extracted to form the CI summary for the test procedure.
-lint:
+# UMBRELLA_CHART_PATH Path of the umbrella chart to work with
+HELM_CHART ?= ska-mid-cbf-deployment
+UMBRELLA_CHART_PATH ?= charts
 
-	# FIXME pylint needs to run twice since there is no way go gather the text and junit xml output at the same time
-	pip3 install pylint2junit; \
-	pylint --output-format=parseable src/ska/skeleton | tee ./build/code_analysis.stdout; \
-	pylint --output-format=pylint2junit.JunitReporter src/ska/skeleton > ./build/reports/linting.xml;
+# RELEASE_NAME is the release that all Kubernetes resources will be labelled with
+RELEASE_NAME = $(HELM_CHART)
 
+KUBE_APP ?= ska-mid-cbf-deployment
 
-.PHONY: all test lint
+TARANTA ?= false
+BOOGIE ?= false
+MINIKUBE ?= false
 
-NOTEBOOK_IGNORE_FILES = not notebook.ipynb
+# Expose All Tango Services to the external network (enable Loadbalancer service)
+EXPOSE_All_DS ?= true
 
-#
-# include makefile to pick up the standard Make targets, e.g., 'make build'
-# build, 'make push' docker push procedure, etc. The other Make targets
-# ('make interactive', 'make test', etc.) are defined in this file.
-#
+SKA_TANGO_OPERATOR ?= true
+
+# Chart for testing
+K8S_CHART ?= $(HELM_CHART)
+K8S_CHARTS ?= $(K8S_CHART)
+K8S_TIMEOUT ?= 600s
 
 # include OCI Images support
 include .make/oci.mk
@@ -54,3 +51,23 @@ include .make/base.mk
 
 # include your own private variables for custom deployment configuration
 -include PrivateRules.mak
+
+# pipeline job id
+CI_JOB_ID ?= local
+
+# TANGO_HOST connection to the Tango DS
+TANGO_HOST ?= databaseds-tango-base:10000
+
+# Domain used for naming Tango Device Servers, Emulator APIs, rabbitmq host, etc.
+CLUSTER_DOMAIN ?= cluster.local
+
+# W503: "Line break before binary operator." Disabled to work around a bug in flake8 where currently both "before" and "after" are disallowed.
+PYTHON_SWITCHES_FOR_FLAKE8 = --ignore=DAR201,W503,E731
+
+# F0002, F0010: Astroid errors. Not our problem.
+# E0401: Import errors. Ignore for now until we figure out our actual project structure.
+# E0611: Name not found in module. This occurs in our pipeline because the image we pull down uses an older version of Python; we should remove this immediately once we have our image building to CAR.
+PYTHON_SWITCHES_FOR_PYLINT = --disable=E0401,E0611,F0002,F0010,E0001,E1101,C0114,C0115,C0116
+PYTHON_SWITCHES_FOR_PYLINT_LOCAL = --disable=E0401,F0002,F0010,E1101,C0114,C0115,C0116
+
+PYTHON_LINT_TARGET = tests/
