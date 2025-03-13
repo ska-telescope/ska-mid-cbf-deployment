@@ -10,6 +10,7 @@ image: $SKA_PYTHON_PYTANGO_BUILDER_IMAGE
 
 stages:
   - lint
+  - build
   - test
   - pages
   - publish
