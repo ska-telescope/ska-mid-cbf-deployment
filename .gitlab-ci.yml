@@ -10,7 +10,6 @@ image: $SKA_PYTHON_PYTANGO_BUILDER_IMAGE
 
 stages:
   - lint
-  - build
   - test
   - pages
   - publish
@@ -25,10 +24,6 @@ variables:
 
 # Include CI templates
 include:
-
-# OCI images
-  - project: 'ska-telescope/templates-repository'
-    file: 'gitlab-ci/includes/oci-image.gitlab-ci.yml'
 
 # Helm charts
   - project: 'ska-telescope/templates-repository'
