@@ -26,10 +26,6 @@ variables:
 # Include CI templates
 include:
 
-# Python
-  - project: 'ska-telescope/templates-repository'
-    file: 'gitlab-ci/includes/python.gitlab-ci.yml'
-
 # OCI images
   - project: 'ska-telescope/templates-repository'
     file: 'gitlab-ci/includes/oci-image.gitlab-ci.yml'
