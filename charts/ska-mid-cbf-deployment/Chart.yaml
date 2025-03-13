@@ -14,7 +14,3 @@ dependencies:
   version: 0.4.13
   repository: https://artefact.skao.int/repository/helm-internal
   condition: ska-tango-base.enabled,global.sub-system.ska-tango-base.enabled
-- name: ska-mid-cbf-fhs-vcc
-  version: 0.1.0
-  #repository: https://artefact.skao.int/repository/helm-internal
-  repository: "file:///home/ja004983_p/projects/ska-mid-cbf-fhs-vcc/charts/ska-mid-cbf-fhs-vcc"
