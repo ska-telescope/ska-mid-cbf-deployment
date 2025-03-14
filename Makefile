@@ -11,6 +11,7 @@ KUBE_NAMESPACE ?= ska-mid-cbf-deployment
 # UMBRELLA_CHART_PATH Path of the umbrella chart to work with
 HELM_CHART ?= ska-mid-cbf-deployment
 UMBRELLA_CHART_PATH ?= charts
+HELM_BUILD_PUSH_SKIP = yes
 
 # RELEASE_NAME is the release that all Kubernetes resources will be labelled with
 RELEASE_NAME = $(HELM_CHART)
