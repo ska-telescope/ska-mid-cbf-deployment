@@ -2,12 +2,12 @@
 
 ## Add a new document
 - clone the repo from 
-	- https://gitlab.com/ska-telescope/ska-mid-cbf-fhs-common
+	- https://gitlab.com/ska-telescope/ska-mid-cbf-deployment
 
-- create new folder in ska-mid-cbf-fhs-common/docs
-    - eg: ska-mid-cbf-fhs-common/docs/api
+- create new folder in ska-mid-cbf-deployment/docs
+    - eg: ska-mid-cbf-deployment/docs/api
 
-- at the bottom of the ska-mid-cbf-fhs-common/docs/index.rst add a new section for api docs eg:
+- at the bottom of the ska-mid-cbf-deployment/docs/index.rst add a new section for api docs eg:
 
     ```
 	.. toctree::
@@ -26,7 +26,7 @@
     ```
 
 ## Building ReadTheDocs Locally
-- To generate the documentation, navigate into `ska-mid-cbf-fhs-common/docs` and run:
+- To generate the documentation, navigate into `ska-mid-cbf-deployment/docs` and run:
     ```
 	poetry run make html
     ```
@@ -36,6 +36,6 @@
 	make html
     ```
 
-- The generated docs can be found in `ska-mid-cbf-fhs-common/docs/build`.
+- The generated docs can be found in `ska-mid-cbf-deployment/docs/build`.
 
 - Open `index.html` in your browser to view the documentation.
