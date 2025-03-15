@@ -1,0 +1,80 @@
+@startuml deployment
+!pragma teoz true
+
+title Mid.CBF MCS On Command
+
+legend top left
+    |       |   |
+    |<#DodgerBlue>| kubernetes |
+    |<#LightGreen>| Tango Devices |
+    |<#Yellow>| Switches |
+    |<#pink>| bmc interfaces |
+    |<#purple> | Operating Systems|
+    
+endlegend
+
+skinparam sequence {
+    ParticipantBorderColor DodgerBlue
+    ParticipantBackgroundColor lightgreen
+    ActorBorderColor DarkGreen
+    ActorBackgroundColor Green
+    BoxBorderColor LightGreen
+    BoxBackgroundColor #F0FFFF
+}
+
+
+box "SKAO Cluster" 
+    box "CSP.LMC" #lightgrey
+    participant "CSP.LMC" as lmc
+    end box
+
+    box "MCS" #lightgrey
+    participant "CBFController" as cbfcontroller
+    participant "FHS Controller" as fhscontroller
+    end box
+
+    participant "SKAO Control Plane" as ctrlplane #DodgerBlue
+end box
+
+
+box "ToR Switch"
+participant "dhcp-server" as switch #yellow
+end box
+
+box "FHS"
+participant "BMC" as bmc #pink
+participant "Linux-OS" as os #purple
+participant "kubelet" as k8s #DodgerBlue
+collections "device-servers" as ds #lightgreen
+end box
+
+
+lmc->cbfcontroller ++: On()
+cbfcontroller -> fhscontroller ++ : On()
+fhscontroller-> bmc: PowerOn() 
+
+bmc->fhscontroller: Success
+bmc->os: start up OS
+os->switch:  Get IP through DHCP
+switch->os: IP Address
+os->k8s: starts kubelet
+note over k8s
+kubelet manually preconfigured 
+or 
+automatic configuration using
+startup script using IP address mapping
+table
+end note
+k8s->ctrlplane: Registers as a worker node
+ctrlplane->k8s: schedule the containers for deployment\nbased on taint, toleration/label, affinity
+k8s->ds: start the device servers
+loop Check Status
+fhscontroller->ds: IsReady()
+ds->fhscontroller : Success
+end
+
+
+fhscontroller->cbfcontroller -- : Success
+cbfcontroller->lmc --: Success
+
+@enduml
