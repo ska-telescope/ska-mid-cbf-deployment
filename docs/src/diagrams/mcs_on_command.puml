@@ -1,4 +1,4 @@
-@startuml deployment
+@startuml mcs_on_command
 !pragma teoz true
 
 title Mid.CBF MCS On Command
