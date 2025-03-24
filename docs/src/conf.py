@@ -133,7 +133,7 @@ html_theme_options = {
 html_context = {
     'theme_logo_only' : True,
     'gitlab_user': 'ska-telescope', # Username
-    "gitlab_repo": "ska-mid-cbf-depoloyment",  # Repo name
+    "gitlab_repo": "ska-mid-cbf-deployment",  # Repo name
     "gitlab_version": "main",  # Version
     'conf_py_path': '/src/', # Path in the checkout to the docs root
 
