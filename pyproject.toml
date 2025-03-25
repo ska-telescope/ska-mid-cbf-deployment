@@ -7,8 +7,12 @@ authors = [
   { name = "Jason Turner", email = "jason.turner@mda.space" },
   { name = "Ben Herriott", email = "ben.herriott@mda.space" },
 ]
+
 license = "BSD license"
 readme = "README.md"
+
+[tool.poetry]
+packages = [{ include = "ska_mid_cbf_deployment", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
