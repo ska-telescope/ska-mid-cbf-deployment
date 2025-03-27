@@ -30,10 +30,10 @@
 
 .. toctree::
   :maxdepth: 2
-  :caption: Package name
+  :caption: Diagrams
   :hidden:
 
-  package/guide
+  package/deployment_diagrams
 
 
 Project-name documentation HEADING
